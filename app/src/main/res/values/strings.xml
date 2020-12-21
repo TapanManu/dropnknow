@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">DropNknow</string>
+    <string name="fall_detector">Fall Detector</string>
+    <string name="x" />
+    <string name="y" />
+    <string name="z" />
+</resources>
