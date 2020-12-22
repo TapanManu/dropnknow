@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     static float x,y,z;
     static double acceleration;
     final double THRESHOLD_LOW = 4.22;          //min acceleration below which fall is detected
-    final double THRESHOLD_HIGH = 19.12;        //max acc above which fall is detected
+    final double THRESHOLD_HIGH = 39.12;        //max acc above which fall is detected
     /*values cited from
     Raymond Y. W. Lee, Alison J. Carlisle, Detection of falls using accelerometers and mobile phone technology,
      Age and Ageing, Volume 40, Issue 6, November 2011, Pages 690–696, https://doi.org/10.1093/ageing/afr050q*/
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             z = event.values[2];
             acceleration = Math.sqrt(x*x + y*y + z*z);
 
-            if(acceleration < THRESHOLD_LOW || acceleration > THRESHOLD_HIGH){
+            if(acceleration > THRESHOLD_HIGH){
                 if(!flag) {
                     Toast.makeText(getApplicationContext(), "under fall", Toast.LENGTH_SHORT).show();
                     flag = true;
