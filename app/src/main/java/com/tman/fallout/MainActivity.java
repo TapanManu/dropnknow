@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     static float x,y,z;
     static double acceleration;
     final double THRESHOLD_LOW = 4.22;          //min acceleration below which fall is detected
-    final double THRESHOLD_HIGH = 39.12;        //max acc above which fall is detected
+    final double THRESHOLD_HIGH = 39.12;        //max acceleration above which fall is detected
     /*values cited from
     Raymond Y. W. Lee, Alison J. Carlisle, Detection of falls using accelerometers and mobile phone technology,
      Age and Ageing, Volume 40, Issue 6, November 2011, Pages 690–696, https://doi.org/10.1093/ageing/afr050q*/
@@ -47,15 +47,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onResume() {
         super.onResume();
         mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-        if(prevmsg!=null){
-            Values.setText(prevmsg);
-        }
+
     }
 
     protected void onPause() {
         super.onPause();
-        prevmsg="not under fall";
-        Values.setText(prevmsg);
+
         mSensorManager.unregisterListener(this);
     }
 
@@ -69,21 +66,26 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             z = event.values[2];
             acceleration = Math.sqrt(x*x + y*y + z*z);
 
+            long currentTime = 0;
+
             if(acceleration > THRESHOLD_HIGH){
                 if(!flag) {
                     Toast.makeText(getApplicationContext(), "under fall", Toast.LENGTH_SHORT).show();
+                    new Notifications(getApplicationContext(),"Device Fall down","Fall detected",1);
                     flag = true;
+                    currentTime = System.currentTimeMillis();
                 }
-                //prevmsg = "under fall";
-                //Values.setText(prevmsg);
-                //send notification when device detcts fall
+                //send notification when device detects fall
                 //reset the state soon after notification is send.
             }
-            else{
-                prevmsg = "not under fall";
-                Values.setText(prevmsg);
-            }
 
+            if(flag) {
+                long diff = System.currentTimeMillis() - currentTime;
+
+                if ((diff / 1000) > 8) {
+                    flag = false;            //reset the flag or state after 8 s
+                }
+            }
             xview.setText(String.valueOf(x));
             yview.setText(String.valueOf(y));
             zview.setText(String.valueOf(z));
